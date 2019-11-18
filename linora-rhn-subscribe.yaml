@@ -1,0 +1,8 @@
+---
+- hosts: linora
+  remote_user: root
+  tasks:
+  - name: Subscribe to RHN
+    redhat_subscription: state=present username=rhn-sa-vfreret password=Cleo@27 autosubscribe=true
+
+

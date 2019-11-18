@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: ocp-pv01
+spec:
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs: 
+    path: /exports/ocp-pv01
+    server: 192.168.122.1
+  persistentVolumeReclaimPolicy: Retain
+

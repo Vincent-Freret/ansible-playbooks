@@ -1,0 +1,13 @@
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+127.0.0.1 linora-0d61d65aeee4
+
+# all linora.net hosts
+̀192.168.1.20 rh7hvirtpp01 rh7hvirtpp01.linora.net kvm01 kvm01.linora.net
+̀192.168.1.24 rhel7pprod01 rhel7pprod01.linora.net ansible ansible.linora.net
+̀192.168.1.21 linora-0d61d65aeee4 linora-0d61d65aeee4.linora.net web01 web01.linora.net
+̀192.168.1.220 linora-cfme01 linora-cfme01.linora.net cloudforms cloudforms.linora.net
+̀192.168.1.200 rhel6hvirt02 rhel6hvirt02.linora.net kvm02 kvm02.linora.net
+̀192.168.1.231 linora-50025349766e linora-50025349766e.linora.net web02 web02.linora.net
+̀192.168.1.18 rhocpmaster01 rhocpmaster01.linora.net openshift openshift.linora.net
+̀192.168.1.23 linorafiles01 linorafiles01.linora.net files files.linora.net

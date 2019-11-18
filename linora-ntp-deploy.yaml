@@ -1,0 +1,4 @@
+- hosts: linora
+  roles:
+    - role: resmo.ntp
+

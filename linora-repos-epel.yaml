@@ -1,0 +1,4 @@
+- hosts: linora
+  roles:
+    - { role: kbrebanov.epel, epel_repo_enabled: false }
+

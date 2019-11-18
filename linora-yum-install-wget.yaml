@@ -1,0 +1,7 @@
+---
+- hosts: linora
+  remote_user: root
+  tasks:
+  - name: ensure wget is at the latest version
+    yum: name=wget state=latest
+

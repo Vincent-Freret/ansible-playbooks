@@ -1,0 +1,115 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cloudforms-0
+  generateName: cloudforms-
+  namespace: cfme-cmp
+  selfLink: /api/v1/namespaces/cfme-cmp/pods/cloudforms-0
+  uid: 1021c202-790d-11e7-97f0-525400b6ef20
+  resourceVersion: '38139'
+  creationTimestamp: '2017-08-04T12:04:27Z'
+  labels:
+    name: cloudforms
+  annotations:
+    kubernetes.io/created-by: >
+      {"kind":"SerializedReference","apiVersion":"v1","reference":{"kind":"StatefulSet","namespace":"cfme-cmp","name":"cloudforms","uid":"0f8036d8-790d-11e7-97f0-525400b6ef20","apiVersion":"apps","resourceVersion":"38116"}}
+    openshift.io/scc: privileged
+    pod.beta.kubernetes.io/hostname: cloudforms-0
+    pod.beta.kubernetes.io/subdomain: cloudforms
+spec:
+  volumes:
+    - name: cloudforms-server
+      persistentVolumeClaim:
+        claimName: cloudforms-server-cloudforms-0
+    - name: cloudforms-region
+      persistentVolumeClaim:
+        claimName: cloudforms-region
+    - name: default-token-x9qb6
+      secret:
+        secretName: default-token-x9qb6
+        defaultMode: 420
+  containers:
+    - name: cloudforms
+      image: 'registry.access.redhat.com/cloudforms45/cfme-openshift-app:latest'
+      ports:
+        - containerPort: 80
+          protocol: TCP
+        - containerPort: 443
+          protocol: TCP
+      env:
+        - name: APPLICATION_INIT_DELAY
+          value: '15'
+        - name: DATABASE_SERVICE_NAME
+          value: postgresql
+        - name: DATABASE_REGION
+          value: '0'
+        - name: MEMCACHED_SERVICE_NAME
+          value: memcached
+        - name: POSTGRESQL_USER
+          value: root
+        - name: POSTGRESQL_PASSWORD
+          value: smartvm
+        - name: POSTGRESQL_DATABASE
+          value: vmdb_production
+        - name: POSTGRESQL_MAX_CONNECTIONS
+          value: '100'
+        - name: POSTGRESQL_SHARED_BUFFERS
+          value: 256MB
+      resources:
+        limits:
+          memory: 2Gi
+        requests:
+          cpu: '1'
+          memory: 2Gi
+      volumeMounts:
+        - name: cloudforms-server
+          mountPath: /persistent
+        - name: cloudforms-region
+          mountPath: /persistent-region
+        - name: default-token-x9qb6
+          readOnly: true
+          mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      livenessProbe:
+        tcpSocket:
+          port: 443
+        initialDelaySeconds: 480
+        timeoutSeconds: 3
+        periodSeconds: 10
+        successThreshold: 1
+        failureThreshold: 3
+      readinessProbe:
+        httpGet:
+          path: /
+          port: 443
+          scheme: HTTPS
+        initialDelaySeconds: 200
+        timeoutSeconds: 3
+        periodSeconds: 10
+        successThreshold: 1
+        failureThreshold: 3
+      lifecycle:
+        preStop:
+          exec:
+            command:
+              - /opt/rh/cfme-container-scripts/sync-pv-data
+      terminationMessagePath: /dev/termination-log
+      imagePullPolicy: Always
+      securityContext:
+        privileged: true
+  restartPolicy: Always
+  terminationGracePeriodSeconds: 30
+  dnsPolicy: ClusterFirst
+  serviceAccountName: default
+  serviceAccount: default
+  securityContext: {}
+  imagePullSecrets:
+    - name: default-dockercfg-xb241
+status:
+  phase: Pending
+  conditions:
+    - type: PodScheduled
+      status: 'False'
+      lastProbeTime: null
+      lastTransitionTime: '2017-08-04T12:04:27Z'
+      reason: Unschedulable
+
