@@ -1,0 +1,39 @@
+---
+- hosts: all
+  gather_facts: false
+
+  vars:
+   srv_method: add-ipamservices
+   srv_addr: 192.168.1.17
+   app_user: admin
+   app_password: admin
+   service_port: 53
+   service_name: dns-lookup
+   method: add-ipamservices
+   category: service-check
+   inv_group: all
+   url_target: www.redhat.com
+   dns_server: 192.168.1.1
+
+  tasks:
+    - name: Test nslookup from server
+      ignore_errors: yes
+      shell: "nslookup {{ url_target }} {{ dns_server }}"
+      register: result
+
+    - debug: msg="method={{ srv_method }}&cat_service={{ category }}&name_ipam={{ inventory_hostname }}&ip_ipam={{ inventory_hostname }}&fqdn_ipam={{ inventory_hostname }}&status_service={{ result.rc }}&check_service={{ url_target }}/{{ dns_server }}:{{ service_port }}&name_service={{ service_name }}&port_service={{ service_port }}&id_group={{ inv_group }}"
+    - name: Logging results
+      uri:
+        user: "{{ elld_user }}"
+        password: "{{ elld_pwd }}"
+        #user: "admin"
+        #password: "admin"
+        method: GET
+        force_basic_auth: yes
+        validate_certs: no
+        url: "http://{{ srv_addr }}/elld/api/?{{item}}"
+      delegate_to: localhost
+      with_items: "method={{ srv_method }}&cat_service={{ category }}&name_ipam={{ inventory_hostname }}&ip_ipam={{ inventory_hostname }}&fqdn_ipam={{ inventory_hostname }}&status_service={{ result.rc }}&check_service={{ url_target }}/{{ dns_server }}:{{ service_port }}&name_service={{ service_name }}&port_service={{ service_port }}&id_group={{ inv_group }}"
+
+
+
